@@ -1,0 +1,22 @@
+{
+  "name": "backgrid-grouped-columns",
+  "repo": "WRidder/backgrid-grouped-columns",
+  "description": "Backgrid.js extension for grouped columns.",
+  "version": "0.0.1",
+  "keywords": [
+    "backbone",
+    "backgrid"
+  ],
+  "main": "backgrid-grouped-columns.js",
+  "scripts": [
+    "backgrid-grouped-columns.js"
+  ],
+  "styles": [
+    "backgrid-grouped-columns.css"
+  ],
+  "dependencies": {
+    "jashkenas/backbone": "*",
+    "wyuenho/backgrid": "0.3.5"
+  },
+  "license": "MIT"
+}
