@@ -1,5 +1,5 @@
 # Backgrid.js - Grouped columns PoC
-Warning! This is by far not production ready code, just a mere proof of concept. It lacks documentation, automatic testing, IE browser support (somehow, did work before) and edge-case tests.
+Warning! This is by far not production ready code, just a mere proof of concept. It lacks documentation, automatic testing and edge-case tests.
 
 ## Demo website
 Online demo of PoC can be found [here](http://techwuppet.com/backgrid_poc_demo/)

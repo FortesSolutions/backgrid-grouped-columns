@@ -36,7 +36,7 @@ module.exports = function (grunt) {
         ],
         options: {
           specs: [
-            "test/select-all.js"
+            "test/grouped-columns.js"
           ],
           template: require("grunt-template-jasmine-istanbul"),
           templateOptions: {
