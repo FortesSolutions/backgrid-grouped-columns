@@ -3,8 +3,8 @@ Warning! This extension is not production ready yet, just a mere proof of concep
 
 To discuss this extension, see [this](https://github.com/wyuenho/backgrid/issues/490) backgrid issue;
 
-## Demo website
-Online demo of PoC can be found [here](http://techwuppet.com/backgrid_poc_demo/)
+## Demo
+Online demo can be found [here](http://techwuppet.com/backgrid_poc_demo/)
 
 ## Browser support (tested)
 - IE8+
