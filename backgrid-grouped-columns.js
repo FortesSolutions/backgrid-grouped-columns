@@ -46,7 +46,7 @@
       // Find amount of header rows
       var rowAmount = view.findDepth();
       var rows = Array.apply(null, new Array(rowAmount));
-      rows = rows.map(function () { return []; });
+      rows = _.map(rows, function () { return []; });
 
       // Loop columns
       var lastNesting = [];
