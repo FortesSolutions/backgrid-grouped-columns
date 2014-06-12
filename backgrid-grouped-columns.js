@@ -15,6 +15,8 @@
   else factory(root._, root.Backgrid, root.moment);
 
 }(this, function (_, Backgrid) {
+  "use strict";
+
   var groupedHeader = Backgrid.Extension.GroupedHeader = Backgrid.Header.extend({
     columnLayout: null,
     columnCollection: Backgrid.Columns,
