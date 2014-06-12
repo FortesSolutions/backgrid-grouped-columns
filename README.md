@@ -1,13 +1,21 @@
-# Backgrid.js - Grouped columns PoC
-Warning! This is by far not production ready code, just a mere proof of concept. It lacks documentation, automatic testing and edge-case tests.
+# Backgrid.js - Grouped columns
+Warning! This extension is not production ready yet, just a mere proof of concept. It lacks documentation, automatic testing and edge-case tests.
 
-## Demo website
-Online demo of PoC can be found [here](http://techwuppet.com/backgrid_poc_demo/)
+To discuss this extension, see [this](https://github.com/wyuenho/backgrid/issues/490) backgrid issue;
 
-## Grouped columns
+## Demo
+Online demo can be found [here](http://techwuppet.com/backgrid_poc_demo/)
+
+## Browser support (tested)
+- IE8+
+- Firefox
+- Chrome
+
+## Features
 - Easily replace current header with grouped version.
 - Generates html5 compliant header elements
-- Uses a seperate column definition to determine the layout
+- You can either use a seperate top-down column definition to determine the layout or:
+- use a bottom-up hierarchy definition
 
 ### Example
 ```javascript
@@ -115,13 +123,51 @@ var colLayout = [
 ];
 
 var groupedHeader = Backgrid.Extension.groupedHeader.extend({
-  columnLayout: colLayout
+  columnLayout: colLayout // Only needed in case of a top-down definition
 });
+
 var pageableGrid = new Backgrid.Grid({
   header: groupedHeader,
   columns: columns,
   collection: pageableTerritories
 });
+
+// If you want to use the bottom-up definition, the 'nesting' property is supported on the column definition
+// Example (same balance sheet structure as above):
+var columnDef = [
+...
+{
+  ...
+  name: "domestic",
+  nesting: ["Revenues", "Balance sheet"]
+  ...
+},
+{
+  ...
+  name: "exports",
+  nesting: ["Revenues", "Balance sheet"]
+  ...
+},
+{
+  ...
+  name: "total",
+  nesting: ["Revenues", "Balance sheet"]
+  ...
+},
+{
+  ...
+  name: "expenditure",
+  nesting: ["Balance sheet"]
+  ...
+},
+{
+  ...
+  name: "profits",
+  nesting: ["Balance sheet"]
+  ...
+}
+...
+];
 ```
 
 ## License
