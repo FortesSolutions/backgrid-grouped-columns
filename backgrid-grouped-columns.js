@@ -12,58 +12,84 @@
     module.exports = factory(require("underscore"), require("backgrid"));
   }
   // Browser
-  else factory(root._, root.Backgrid, root.moment);
+  else {
+    factory(root._, root.Backgrid, root.moment);
+  }
 
 }(this, function (_, Backgrid) {
   "use strict";
 
-  var groupedHeader = Backgrid.Extension.GroupedHeader = Backgrid.Header.extend({
+  Backgrid.Extension.GroupedHeader = Backgrid.Header.extend({
+    defaults: {
+      group: true
+    },
     columnLayout: null,
     columnCollection: Backgrid.Columns,
     headerRows: [],
 
-    initialize: function() {
-      Backgrid.Header.prototype.initialize.apply(this, arguments);
-      this.listenTo(this.columns, "change:renderable", this.render);
-      this.listenTo(this.columns, "add remove", this.render);
+    initialize: function (options) {
+      _.extend(this, this.defaults, options.headerOptions || {});
+
+      this.columns = options.columns;
+      if (!(this.columns instanceof Backbone.Collection)) {
+        this.columns = new Backgrid.Columns(this.columns);
+      }
+
+      var colEvents = "remove change:renderable sort" + ((this.columns.comparator) ? "" : " add");
+      this.listenTo(this.columns, colEvents, this.render);
+      this.listenTo(this.columns, "label:show", this.showLabel);
+      this.listenTo(this.columns, "label:hide", this.hideLabel);
     },
 
     /**
      Renders this table head with a single row of header cells.
      */
     render: function () {
-      var view = this;
-      view.$el.empty();
+      var self = this;
+      self.$el.empty();
 
       // If a column layout has been defined, determine nesting
-      if (view.columnLayout) {
+      if (self.columnLayout) {
         var key;
-        for(key in view.columnLayout) {
-          if (view.columnLayout.hasOwnProperty(key)) {
-            view.calculateNesting(view.columnLayout[key]);
+        for (key in self.columnLayout) {
+          if (self.columnLayout.hasOwnProperty(key)) {
+            self.calculateNesting(self.columnLayout[key]);
           }
         }
       }
 
       // Find amount of header rows
-      var rowAmount = view.findDepth();
+      var rowAmount = (self.group) ? self.findDepth() : 1;
       var rows = Array.apply(null, new Array(rowAmount));
-      rows = _.map(rows, function () { return []; });
+      rows = _.map(rows, function () {
+        return [];
+      });
 
       // Loop columns
       var lastNesting = [];
-      view.columns.each(function(column) {
-        var colNesting = column.get("nesting");
+      self.columns.each(function (column) {
+        var colNesting = (self.group) ? column.get("nesting") : [];
         var renderable = (typeof column.get("renderable") == "undefined" || column.get("renderable"));
-        if (colNesting && !_.isEmpty(colNesting) && renderable)  {
+        if (colNesting && !_.isEmpty(colNesting) && renderable) {
+          // Add index to colname for proper comparison for unique and different entries
+          var colNestingIndex = _.map(colNesting, function (nest, ind) {
+            return nest + ind;
+          });
+
           // Check for overlap and uniques with previous column; Use index based intersection
-          var overlap = _.filter(lastNesting, function(num, ind) { return num == colNesting[ind];});
-          var unique = _.difference(colNesting, overlap);
+          var parentOverlap = true;
+          var overlap = _.filter(lastNesting, function (num, ind) {
+            if (!parentOverlap) {
+              return false;
+            }
+            return parentOverlap = num == colNestingIndex[ind];
+          });
+          var unique = _.difference(colNestingIndex, overlap);
 
           // Create unique parents
-          _.each(unique, function(element, index) {
+          _.each(unique, function (element, index) {
             rows[index + overlap.length].push({
-              name: element,
+              name: colNesting[_.indexOf(colNestingIndex, element)],
               sortable: false,
               editable: false,
               attributes: {
@@ -75,7 +101,7 @@
           });
 
           // Increase colspan for every intersection
-          _.each(overlap, function(element, index) {
+          _.each(overlap, function (element, index) {
             var lastElement = _.last(rows[index]);
             lastElement.attributes.colspan++;
             lastElement.childColumns.push(column.get("name"));
@@ -89,9 +115,9 @@
             }}, column.toJSON()));
 
           // Update nesting
-          lastNesting = colNesting;
+          lastNesting = colNestingIndex;
         }
-        else if(renderable) {
+        else if (renderable) {
           // Reset nesting
           lastNesting = [];
 
@@ -100,32 +126,35 @@
             attributes: {
               colspan: 1,
               rowspan: rowAmount
-          }}, column.toJSON()));
+            }}, column.toJSON()));
         }
       });
 
       // Render the rows
-      view.headerRows = [];
-      _.each(rows, function(coll) {
+      self.headerRows = [];
+      _.each(rows, function (coll) {
         var row = new Backgrid.HeaderRow({
           columns: coll,
-          collection: view.collection
+          collection: self.collection
         });
-        view.$el.append(row.render().$el);
-        view.headerRows.push(row);
+        self.$el.append(row.render().$el);
+        self.headerRows.push(row);
       });
 
+      // Attach row object to object to ensure compatibility with other plugins.
+      self.row = _.last(self.headerRows);
+
       // Trigger event
-      view.collection.trigger("backgrid:header:rendered");
+      self.trigger("backgrid:header:rendered", self);
 
       this.delegateEvents();
       return this;
     },
-    calculateNesting: function(object, nestArray) {
+    calculateNesting: function (object, nestArray) {
       var nestingArray = _.clone(nestArray || []);
       if (_.has(object, "children") && _.isArray(object.children) && !_.isEmpty(object.children)) {
         nestingArray.push(object.name);
-        _.each(object.children, function(obj) {
+        _.each(object.children, function (obj) {
           this.calculateNesting(obj, nestingArray);
         }, this);
       }
@@ -137,17 +166,31 @@
         }
       }
     },
-    findDepth: function() {
-      var view = this;
+    findDepth: function () {
+      var self = this;
       var rows = 0;
 
-      view.columns.each(function(col) {
+      self.columns.each(function (col) {
         if (col.get('nesting')) {
           rows = Math.max(rows, col.get('nesting').length);
         }
       });
 
       return rows + 1;
+    },
+    setGrouping: function (group) {
+      this.group = group;
+      this.render();
+    },
+    showLabel: function (colModel) {
+      // Set label
+      colModel.set("label", colModel.get("actualLabel"));
+      this.render();
+    },
+    hideLabel: function (colModel) {
+      // Empty label
+      colModel.set("label", "");
+      this.render();
     }
   });
 }));
