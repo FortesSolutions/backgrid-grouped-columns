@@ -171,5 +171,9 @@ var columnDef = [
 ```
 
 ## License
-Copyright (c) 2014 Wilbert van de Ridder
+Copyright © 2014 [Fortes Solutions](https://www.fortesglobal.com/en).
+
 Licensed under the [MIT license](LICENSE-MIT "MIT License").
+
+## Authors
+This extension was created by [Wilbert van de Ridder](https://github.com/WRidder) and is currently maintained by [Fortes Solutions Team](https://github.com/orgs/FortesSolutions/people).
