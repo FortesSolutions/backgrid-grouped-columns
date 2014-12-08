@@ -85,11 +85,14 @@
             return parentOverlap = num == colNestingIndex[ind];
           });
           var unique = _.difference(colNestingIndex, overlap);
+          
+          var columnJSON = column.toJSON();
 
           // Create unique parents
-          _.each(unique, function (element, index) {
-            rows[index + overlap.length].push({
+          _.each(unique, function(element, index) {
+            rows[index + overlap.length].push(_.defaults({
               name: colNesting[_.indexOf(colNestingIndex, element)],
+              label: colNesting[_.indexOf(colNestingIndex, element)],
               sortable: false,
               editable: false,
               attributes: {
@@ -97,7 +100,7 @@
                 rowspan: 1
               },
               childColumns: [column.get("name")]
-            });
+            }, columnJSON));
           });
 
           // Increase colspan for every intersection
