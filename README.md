@@ -1,7 +1,7 @@
 # Backgrid.js - Grouped columns
 Warning! This extension is not production ready yet, just a mere proof of concept. It lacks documentation, automatic testing and edge-case tests.
 
-To discuss this extension, see [this](https://github.com/wyuenho/backgrid/issues/392) backgrid issue;
+To discuss this extension, see [this](https://github.com/wyuenho/backgrid/issues/392) backgrid issue.
 
 ## Demo
 Online demo can be found [here](http://techwuppet.com/backgrid_poc_demo/)
@@ -14,7 +14,7 @@ Online demo can be found [here](http://techwuppet.com/backgrid_poc_demo/)
 ## Features
 - Easily replace current header with grouped version.
 - Generates html5 compliant header elements
-- You can either use a seperate top-down column definition to determine the layout or:
+- You can either use a seperate top-down column definition to determine the layout or...
 - use a bottom-up hierarchy definition
 
 ### Example
