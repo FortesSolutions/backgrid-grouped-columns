@@ -5,3 +5,12 @@
   Copyright (c) 2014 Wilbert van de Ridder and contributors
   Licensed under the MIT @license.
 */
+
+.backgrid thead th {
+  border-left: 1px solid #ddd;
+  vertical-align: middle;
+}
+
+.backgrid thead th.select-all-header-cell {
+  vertical-align: bottom;
+}
