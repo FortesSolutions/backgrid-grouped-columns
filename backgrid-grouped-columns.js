@@ -34,7 +34,7 @@
         this.columns = new Backgrid.Columns(this.columns);
       }
 
-      var colEvents = "remove change:renderable sort add");
+      var colEvents = "remove change:renderable sort add";
       this.listenTo(this.columns, colEvents, this.render);
       this.listenTo(this.columns, "label:show", this.showLabel);
       this.listenTo(this.columns, "label:hide", this.hideLabel);
