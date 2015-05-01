@@ -4,7 +4,7 @@
     "backgrid-grouped-columns.js",
     "backgrid-grouped-columns.css"
   ],
-  "version": "0.1.1",
+  "version": "0.1.4",
   "description": "Backgrid.js extension for (re)orderable columns",
   "homepage": "https://github.com/WRidder/backgrid-select-all",
   "authors": [
