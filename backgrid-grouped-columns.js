@@ -6,17 +6,17 @@
  Licensed under the MIT @license.
  */
 (function (root, factory) {
-
-  // CommonJS
-  if (typeof exports == "object") {
-    module.exports = factory(require("underscore"), require("backgrid"));
+  if (typeof define === 'function' && define.amd) {
+    // AMD. Register as an anonymous module.
+    define(["backgrid", "underscore"], factory);
+  } else if (typeof exports == "object") {
+    // CommonJS
+    module.exports = factory(require("backgrid"), require("underscore"));
   }
   // Browser
-  else {
-    factory(root._, root.Backgrid, root.moment);
-  }
+  else factory(root.Backgrid, root._);
 
-}(this, function (_, Backgrid) {
+}(this, function (Backgrid, _) {
   "use strict";
 
   Backgrid.Extension.GroupedHeader = Backgrid.Header.extend({
@@ -30,7 +30,7 @@
       _.extend(this, this.defaults, options.headerOptions || {});
 
       this.columns = options.columns;
-      if (!(this.columns instanceof Backbone.Collection)) {
+      if (!(this.columns instanceof Backgrid.Columns)) {
         this.columns = new Backgrid.Columns(this.columns);
       }
 
