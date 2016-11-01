@@ -117,6 +117,8 @@
             });
           });
 
+          column.set("childcolumn",true);
+
           // Add main column
           rows[colNesting.length].push(column.set("attributes", {
             colspan: 1,
@@ -152,6 +154,12 @@
       // Set attributes. Loop cells of rows.
       _.each(self.headerRows, function(headerRow) {
         _.each(headerRow.cells, function(cell) {
+          if(self.rotateChild && cell.column.get('childcolumn')){
+            cell.$el.addClass('rotate');
+          }
+          if(!cell.column.get('childcolumn') && cell.column.attributes.prefix) {
+            cell.$el.html(cell.column.attributes.prefix + cell.$el.html());
+          }
           cell.$el.prop(cell.column.get("attributes"));
         });
       });
